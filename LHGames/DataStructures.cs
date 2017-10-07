@@ -45,7 +45,7 @@ namespace StarterProject.Web.Api
         S   //Shop
     }
 
-    public class Point
+    public struct Point
     {
         public int X { get; private set; }
         public int Y { get; private set; }
