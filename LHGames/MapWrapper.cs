@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Collections;
 using StarterProject.Web.Api;
 using LHGames.Controllers;
 
@@ -14,7 +12,7 @@ namespace LHGames
 
         public AStar Map { get; private set; }
         public List<Point> TraveledPositions { get; private set; }
-        public Point HousePosition { get; private set; }
+        public static Point HousePosition { get; private set; }
 
         public MapWrapper(Point startPosition, Tile[,] map)
         {
@@ -53,18 +51,18 @@ namespace LHGames
         //    return result;
         //}
 
-        public List<Node> GetPathToNearestType(TargetType t)
+        public List<Node> GetPathToNearestType(TargetType t, Point position)
         {
             switch(t)
             {
                 case TargetType.Ennemy:
-                    break;
+                    return Map.FindPath(position, AStar.players.Aggregate((c, d) => Point.Distance(position, c) < Point.Distance(position, d) ? c : d));
                 case TargetType.Shop:
-                    break;
-                case TargetType.House:
-                    break;
+                    return Map.FindPath(position, FindNearestNodeInternal(TileType.S, position));
+                case TargetType.EnnemyHouse:
+                    return Map.FindPath(position, FindNearestNodeInternal(TileType.H, position));
                 case TargetType.Ressource:
-                    break;
+                    return Map.FindPath(position, FindNearestNodeInternal(TileType.R, position));
                 default:
                     break;
             }
@@ -72,7 +70,7 @@ namespace LHGames
             return new List<Node>();
         }
 
-        public enum TargetType { Ennemy, Shop, House, Ressource}
+        public enum TargetType { Ennemy, Shop, EnnemyHouse, Ressource, }
 
         private List<Point> TilesToDiscover(Point position)
         {
@@ -83,5 +81,28 @@ namespace LHGames
         {
             return !TraveledPositions.Contains(newPosition);
         }
+
+        private Point FindNearestNodeInternal(TileType type, Point position)
+        {
+            Node closest = null;
+            double shortestDist = double.PositiveInfinity;
+            foreach(Node n in Map.Values.Where( x => (TileType)x.Tile.C == type))
+            {
+                if(closest == null)
+                {
+                    closest = n;
+                    shortestDist = Point.Distance(closest.Location, position);
+                }
+                else if(Point.Distance(n.Location, position) < shortestDist)
+                {
+                    closest = n;
+                    shortestDist = Point.Distance(n.Location, position);
+                }
+            }
+
+            return closest.Location;
+        }
+
+
     }
 }
