@@ -36,7 +36,7 @@ namespace LHGames.Controllers
 
         public Node(Tile tile)
         {
-            Location = new Point(tile.X, tile.Y);
+            Location = new StarterProject.Web.Api.Point(tile.X, tile.Y);
             State = States.Dunno;
             lastH = null;
             H = int.MinValue;
@@ -59,7 +59,7 @@ namespace LHGames.Controllers
         public States State { get; set; }
         public enum States { Dunno, Open, Closed }
 
-        public static float GetTraversalCost(Point location, Point otherLocation)
+        public static float GetTraversalCost(StarterProject.Web.Api.Point location, StarterProject.Web.Api.Point otherLocation)
         {
             float deltaX = otherLocation.X - location.X;
             float deltaY = otherLocation.Y - location.Y;
@@ -68,7 +68,7 @@ namespace LHGames.Controllers
 
         public override string ToString()
         {
-            return "(" + X + ", " + Y + ") => " + Enum.GetName(State.GetType(), State);
+            return "{" + X + "," + Y + "} => " + Enum.GetName(State.GetType(), State);
         }
     }
 }

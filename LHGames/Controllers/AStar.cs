@@ -9,7 +9,7 @@ namespace LHGames.Controllers
     public class AStar : Dictionary<Point, Node>
     {
         public static List<Point> players = new List<Point>();
-        
+
         public AStar(Tile[,] tiles)
         {
             foreach (Tile tile in tiles) {
@@ -52,7 +52,7 @@ namespace LHGames.Controllers
             }
         }
 
-        public List<Node> FindPath(Tile from, Tile to)
+        public List<Node> FindPath(Point from, Point to)
         {
             try {
                 UpdateHs(this.Select(t => t.Value).ToList(), this[to]);
@@ -91,10 +91,10 @@ namespace LHGames.Controllers
             }
             return false;
         }
-        
+
         private void UpdateHs(List<Node> nodes, Node to) {
             foreach (var node in this) {
-                if (node.Value.lastH.ID != to.ID)  {
+                if (node.Value.lastH != null && node.Value.lastH.ID != to.ID) {
                     node.Value.H = Node.GetTraversalCost(node.Value.Location, to.Location);
                     node.Value.lastH = to;
                 }
@@ -102,10 +102,10 @@ namespace LHGames.Controllers
         }
 
         private void UpdateH(Node node, Node to) {
-            if (node.lastH.ID != to.ID) {
-                node.H = Node.GetTraversalCost(node.Location, to.Location);
-                node.lastH = to;
-            }
+            //if (node.lastH.ID != to.ID) {
+            node.H = Node.GetTraversalCost(node.Location, to.Location);
+            node.lastH = to;
+            //}
         }
 
         private List<Node> GetAdjacentWalkableNodes(Node fromNode)
@@ -129,9 +129,6 @@ namespace LHGames.Controllers
                 }
 
                 // Ignore players
-                if (players.First(p => p == node.Location) != null) {
-                    continue;
-                }
 
                 // Already-open nodes are only added to the list if their G-value is lower going via this route.
                 if (node.State == Node.States.Open) {

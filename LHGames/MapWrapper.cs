@@ -10,12 +10,14 @@ namespace LHGames
 {
     public class MapWrapper
     {
-        public AStar Map;
-        public List<Point> TraveledPositions;
-        public Point HousePosition;
+        public AStar Map { get; private set; }
+        public List<Point> TraveledPositions { get; private set; }
+        public Point HousePosition { get; private set; }
 
         public MapWrapper(Point startPosition, Tile[,] map)
         {
+            HousePosition = startPosition;
+            TraveledPositions = new List<Point>();
             Map = new AStar(map);
             TraveledPositions.Add(startPosition);
         }
@@ -68,12 +70,12 @@ namespace LHGames
 
         public enum TargetType { Ennemy, Shop, House, Ressource}
 
-        private List<Point> TilesToDiscover(Point position)
+        private List<StarterProject.Web.Api.Point> TilesToDiscover(StarterProject.Web.Api.Point position)
         {
-            return new List<Point>();
+            return new List<StarterProject.Web.Api.Point>();
         }
 
-        private bool ShouldDiscover(Point newPosition)
+        private bool ShouldDiscover(StarterProject.Web.Api.Point newPosition)
         {
             return !TraveledPositions.Contains(newPosition);
         }
