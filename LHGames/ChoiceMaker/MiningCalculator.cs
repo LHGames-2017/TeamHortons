@@ -7,7 +7,7 @@ namespace LHGames.ChoiceMaker
 {
     public class MiningCalculator
     {
-        private double focusMultiplier;
+        private static double focusMultiplier;
 
         public double calculateWeight(ref Player player, int distanceToObjective, int distanceToHouse, int miningAmount)
         {
