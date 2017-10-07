@@ -9,7 +9,7 @@ namespace LHGames.ChoiceMaker
         private static double focusMultiplier;
         private static int pastPlayerHealth = 5;
 
-        public double calculateWeight(ref Player player, int distanceToEnemy)
+        public double calculateWeight(Player player, int distanceToEnemy)
         {
             int healthLost = pastPlayerHealth - player.Health;
 

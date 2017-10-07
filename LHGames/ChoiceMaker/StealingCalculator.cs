@@ -9,7 +9,7 @@ namespace LHGames.ChoiceMaker
     {
         private static double focusMultiplier;
 
-        public double calculateWeight(ref Player player, int distanceToObjective, int distanceToHouse, int stealingAmount)
+        public double calculateWeight(Player player, int distanceToObjective, int distanceToHouse, int stealingAmount)
         {
             int availableCapacity = player.CarryingCapacity - player.CarriedResources;
 
