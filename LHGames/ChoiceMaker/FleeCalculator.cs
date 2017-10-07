@@ -17,6 +17,8 @@ namespace LHGames.ChoiceMaker
 
         public double calculateWeight(ref Player player, int distanceToEnemy)
         {
+
+
             int healthLost = pastPlayerHealth - player.Health;
 
             double weight;
