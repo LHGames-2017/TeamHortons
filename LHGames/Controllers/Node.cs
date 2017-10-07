@@ -48,6 +48,9 @@ namespace LHGames.Controllers
                 case TileType.L:
                     IsWalkable = false;
                     break;
+                case TileType.R:
+                    IsWalkable = false;
+                    break;
                 default:
                     IsWalkable = true;
                     break;

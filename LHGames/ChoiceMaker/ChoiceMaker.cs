@@ -31,7 +31,7 @@ namespace LHGames.ChoiceMaker
             {
                 path = new Queue<Node>(mapWrapper.GetPathToNearestType(MapWrapper.TargetType.Ressource, gameInfo.Player.Position));
 
-                if (path.Count <= 1)
+                if (path.Count == 1)
                 {
                     SwitchState(States.Mine);
                 }
@@ -58,6 +58,7 @@ namespace LHGames.ChoiceMaker
             Console.WriteLine(gameInfo.Player.CarriedResources + "/" + gameInfo.Player.CarryingCapacity + " -- " + Enum.GetName(state.GetType(), state));
 
             if (path.Count == 0) {
+                Console.WriteLine("FUCK");
                 return AIHelper.CreateMoveAction(gameInfo.Player.Position);
             }
 
