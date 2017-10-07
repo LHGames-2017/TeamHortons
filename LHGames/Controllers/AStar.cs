@@ -49,7 +49,7 @@ namespace LHGames.Controllers
             }
         }
 
-        public void Add(IEnumerable<Tile> tiles)
+        public void Add(Tile[,] tiles)
         {
             foreach (Tile tile in tiles) {
                 Add(tile);

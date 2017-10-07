@@ -54,6 +54,7 @@ namespace LHGames.ChoiceMaker
                 }
             }
 
+            Console.WriteLine(gameInfo.Player.Position + " " + path.Count);
             Console.WriteLine(gameInfo.Player.CarriedResources + "/" + gameInfo.Player.CarryingCapacity + " -- " + Enum.GetName(state.GetType(), state));
 
             if (path.Count == 0) {
