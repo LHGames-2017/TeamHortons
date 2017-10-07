@@ -9,17 +9,37 @@ namespace LHGames.ChoiceMaker
 {
     public class ChoiceMaker
     {
-
         static Queue<Node> path = new Queue<Node>();
         static States state = States.Dunno;
         static States lastState = States.Dunno;
+        static CollectingUpgradeCalculator collectingUpgradeCalculator = new CollectingUpgradeCalculator();
         private MapWrapper mapWrapper { get => MapWrapper.Instance; }
 
         public string HugeStateMachine(GameInfo gameInfo)
         {
             if(gameInfo.Player.Position.X == gameInfo.Player.HouseLocation.X && gameInfo.Player.Position.Y == gameInfo.Player.HouseLocation.Y)
             {
-
+                Player player = gameInfo.Player;
+                if (player.CarryingCapacity == 1000 && player.Score > 15000)
+                {
+                    SwitchState(States.UpgradeCapacity);
+                }
+                else if (player.CarryingCapacity == 1500 && player.Score > 65000)
+                {
+                    SwitchState(States.UpgradeCapacity);
+                }
+                else if (player.CarryingCapacity == 2500 && player.Score > 165000)
+                {
+                    SwitchState(States.UpgradeCapacity);
+                }
+                else if (player.CarryingCapacity == 5000 && player.Score > 415000)
+                {
+                    SwitchState(States.UpgradeCapacity);
+                }
+                else if (player.CarryingCapacity == 10000 && player.Score > 915000)
+                {
+                    SwitchState(States.UpgradeCapacity);
+                }
             }
 
             if (state == States.BreakWall && path.Peek().Type != TileType.W)
@@ -77,6 +97,8 @@ namespace LHGames.ChoiceMaker
                         return AIHelper.CreateAttackAction(path.Peek().Location);
                     }
                     return AIHelper.CreateMoveAction(path.Dequeue().Location);
+                case States.UpgradeCapacity:
+                    return AIHelper.CreateUpgradeAction(UpgradeType.CarryingCapacity);
                 default:
                     return AIHelper.CreateMoveAction(gameInfo.Player.Position);
             }
@@ -91,7 +113,8 @@ namespace LHGames.ChoiceMaker
             Mine,
             WalkToHome,
             Wait,
-            BreakWall
+            BreakWall,
+            UpgradeCapacity
         }
 
         private void SwitchState(States newState)
