@@ -23,14 +23,16 @@
         {
             GameInfo gameInfo = JsonConvert.DeserializeObject<GameInfo>(map);
             var carte = AIHelper.DeserializeMap(gameInfo.CustomSerializedMap);
-            
+
+            Draw(carte, gameInfo.Player.Position);
+
             if (mapWrapper == null) {
                 mapWrapper = new MapWrapper(gameInfo.Player.Position, carte);
             } else {
                 mapWrapper.UpdateMap(carte, gameInfo.Player.Position);
             }
 
-            if (gameInfo.Player.CarryingCapacity < gameInfo.Player.CarriedResources && path.Count == 0) {
+            if (gameInfo.Player.CarryingCapacity > gameInfo.Player.CarriedResources && path.Count == 0) {
                 path = new Queue<Node>(mapWrapper.GetPathToNearestType(MapWrapper.TargetType.Ressource, gameInfo.Player.Position));
 
                 if (path.Count <= 1) {
@@ -38,7 +40,7 @@
                 } else {
                     state = States.WalkToMine;
                 }
-            } else if (gameInfo.Player.CarryingCapacity >= gameInfo.Player.CarriedResources && path.Count == 0) {
+            } else if (gameInfo.Player.CarryingCapacity <= gameInfo.Player.CarriedResources && path.Count == 0) {
                 path = new Queue<Node>(mapWrapper.Map.FindPath(gameInfo.Player.Position, gameInfo.Player.HouseLocation));
 
                 if (path.Count <= 1) {
@@ -48,9 +50,11 @@
                 }
             }
 
+            Console.WriteLine(gameInfo.Player.CarriedResources + "/" + gameInfo.Player.CarryingCapacity + " -- " +  Enum.GetName(state.GetType(), state));
+
             switch (state) {
                 case States.Mine:
-                    return AIHelper.CreateCollectAction(new Point(0, 0));
+                    return AIHelper.CreateCollectAction(path.Dequeue().Location);
                 case States.Wait:
                     return AIHelper.CreateMoveAction(gameInfo.Player.HouseLocation);
                 case States.WalkToMine:

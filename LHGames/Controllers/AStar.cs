@@ -58,6 +58,10 @@ namespace LHGames.Controllers
 
         public List<Node> FindPath(Point from, Point to)
         {
+            if (from.X == to.X && from.Y == to.Y) {
+                return new List<Node>();
+            }
+
             try {
                 UpdateHs(Values.ToList(), this[to]);
                 
