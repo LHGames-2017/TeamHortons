@@ -9,6 +9,12 @@ namespace LHGames.ChoiceMaker
         private double focusMultiplier;
         private int pastPlayerHealth;
 
+        public FleeCalculator()
+        {
+            focusMultiplier = 0;
+            pastPlayerHealth = 0;
+        }
+
         public double calculateWeight(ref Player player, int distanceToEnemy)
         {
             int healthLost = pastPlayerHealth - player.Health;
