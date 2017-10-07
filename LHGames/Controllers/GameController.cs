@@ -20,14 +20,14 @@
         {
             GameInfo gameInfo = JsonConvert.DeserializeObject<GameInfo>(map);
             var carte = AIHelper.DeserializeMap(gameInfo.CustomSerializedMap);
-
-
+            
             Draw(carte, gameInfo.Player.Position);
-            //if (mapWrapper == null) {
-            //    mapWrapper = new MapWrapper(gameInfo.Player.Position, carte);
-            //} else {
-            //    mapWrapper.UpdateMap(carte, gameInfo.Player.Position);
-            //}
+
+            if (mapWrapper == null) {
+                mapWrapper = new MapWrapper(gameInfo.Player.Position, carte);
+            } else {
+                mapWrapper.UpdateMap(carte, gameInfo.Player.Position);
+            }
 
             //var path = mapWrapper.Map.FindPath(new Point(15, 17), new Point(15, 21));
             //Console.WriteLine("Count: " + path.Count);
