@@ -68,9 +68,9 @@ namespace LHGames
 
         public enum TargetType { Ennemy, Shop, EnnemyHouse, Ressource, }
 
-        private List<StarterProject.Web.Api.Point> TilesToDiscover(StarterProject.Web.Api.Point position)
+        private List<Point> TilesToDiscover(Point position)
         {
-            return new List<StarterProject.Web.Api.Point>();
+            return new List<Point>();
         }
 
         private bool ShouldDiscover(StarterProject.Web.Api.Point newPosition)
