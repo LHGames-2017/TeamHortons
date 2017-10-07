@@ -30,7 +30,6 @@ namespace StarterProject.Web.Api
             return CreateAction("CollectAction", position);
         }
 
-
         public static string CreateMoveAction(Point newPosition)
         {
             return CreateAction("MoveAction", newPosition);
