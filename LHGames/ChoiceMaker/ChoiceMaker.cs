@@ -19,7 +19,7 @@ namespace LHGames.ChoiceMaker
         {
             if (state == States.BreakWall && path.Peek().Type != TileType.W)
             {
-
+                SwitchState(lastState);
             }
 
             if (gameInfo.Player.CarryingCapacity > gameInfo.Player.CarriedResources && path.Count == 0)
@@ -54,7 +54,7 @@ namespace LHGames.ChoiceMaker
             switch (state)
             {
                 case States.BreakWall:
-
+                    return AIHelper.CreateAttackAction(path.Peek().Location);
                 case States.Mine:
                     return AIHelper.CreateCollectAction(path.Dequeue().Location);
                 case States.Wait:
@@ -65,6 +65,7 @@ namespace LHGames.ChoiceMaker
                     if (next.Type == TileType.W)
                     {
                         SwitchState(States.BreakWall);
+                        return AIHelper.CreateAttackAction(path.Peek().Location);
                     }
                     return AIHelper.CreateMoveAction(path.Dequeue().Location);
                 default:
