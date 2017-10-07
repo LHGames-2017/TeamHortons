@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Collections;
 using StarterProject.Web.Api;
 using LHGames.Controllers;
 
@@ -70,7 +68,7 @@ namespace LHGames
 
         private List<Point> TilesToDiscover(Point position)
         {
-            return new List<Point>();
+            throw new NotImplementedException();
         }
 
         private bool ShouldDiscover(Point newPosition)
@@ -78,14 +76,22 @@ namespace LHGames
             return !TraveledPositions.Contains(newPosition);
         }
 
-        private Node FindNearestNode(TileType type, Point position)
+        private Node FindNearestNodeInternal(TileType type, Point position)
         {
             Node closest = null;
+            double shortestDist = double.PositiveInfinity;
             foreach(Node n in Map.Values.Where( x => (TileType)x.Tile.C == type))
             {
                 if(closest == null)
+                {
                     closest = n;
-                else if(Point.Distance(closest.))
+                    shortestDist = Point.Distance(closest.Location, position);
+                }
+                else if(Point.Distance(n.Location, position) < shortestDist)
+                {
+                    closest = n;
+                    shortestDist = Point.Distance(n.Location, position);
+                }
             }
 
             return closest;
