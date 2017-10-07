@@ -56,10 +56,18 @@ namespace LHGames.Controllers
             }
         }
 
-        public List<Node> FindPath(Point from, Point to)
+        public List<Node> FindPath(Point from, Point to, bool ignoreWalls = false)
         {
             if (from.X == to.X && from.Y == to.Y) {
                 return new List<Node>();
+            }
+
+            if (ignoreWalls) {
+                Values.ToList().ForEach(p => {
+                    if (p.Type == TileType.W) {
+                        p.IsWalkable = true;
+                    }
+                });
             }
 
             try {
