@@ -9,7 +9,7 @@ namespace LHGames.Controllers
     public class AStar : Dictionary<Point, Node>
     {
         public static List<Point> players = new List<Point>();
-
+        
         public AStar(Tile[,] tiles)
         {
             foreach (Tile tile in tiles) {

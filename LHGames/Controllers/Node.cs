@@ -21,6 +21,8 @@ namespace LHGames.Controllers
         public float H { get; set; }
         public float F { get; set; }
 
+        public TileType Type { get => (TileType)Tile.C; }
+
         public Node lastH { get; set; }
         private Node parentNode;
         public Node ParentNode {

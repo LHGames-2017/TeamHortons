@@ -4,11 +4,13 @@
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
+    using LHGames.Controllers;
 
     [Route("/")]
     public class GameController : Controller
     {
         AIHelper player = new AIHelper();
+        AStar aStar;
 
         [HttpPost]
         public string Index([FromForm]string map)
