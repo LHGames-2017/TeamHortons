@@ -134,16 +134,4 @@ namespace StarterProject.Web.Api
         public int MaxHealth;
         public Point Position;
     }
-
-    // TODO: Replace this with TileType enum.
-    public enum TileContent
-    {
-        Empty,
-        Wall,
-        House,
-        Lava,
-        Resource,
-        Shop,
-        Player
-    }
 }
