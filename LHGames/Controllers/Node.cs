@@ -29,7 +29,7 @@ namespace LHGames.Controllers
             set {
                 // When setting the parent, also calculate the traversal cost from the start node to here (the 'G' value)
                 parentNode = value;
-                G = parentNode.G + GetTraversalCost(Location, parentNode.Location);
+                G = parentNode.G + CalcTraversal(parentNode.Location);
             }
         }
 
@@ -62,11 +62,11 @@ namespace LHGames.Controllers
             parentNode = null;
         }
 
-        public static float GetTraversalCost(Point location, Point otherLocation)
+        public float CalcTraversal(Point otherLocation)
         {
-            float deltaX = otherLocation.X - location.X;
-            float deltaY = otherLocation.Y - location.Y;
-            return (float)Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+            float deltaX = otherLocation.X - X;
+            float deltaY = otherLocation.Y - Y;
+            return (float)Math.Sqrt(deltaX * deltaX + deltaY * deltaY) + (Type == TileType.W ? 5 : 0);
         }
 
         public override string ToString()

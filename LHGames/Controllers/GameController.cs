@@ -13,8 +13,7 @@
     public class GameController : Controller
     {
         // AIHelper player = new AIHelper();
-
-        static int nbTurns = 0;
+        
         static MapWrapper mapWrapper = null;
         static ChoiceMaker choiceMaker = new ChoiceMaker();
 
