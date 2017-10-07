@@ -33,6 +33,7 @@
             {
                 mapWrapper.UpdateMap(carte, gameInfo.Player.Position);
             }
+
             return choiceMaker.HugeStateMachine(gameInfo);
 
         }

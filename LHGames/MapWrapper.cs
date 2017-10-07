@@ -55,7 +55,7 @@ namespace LHGames
                 case TargetType.EnnemyHouse:
                     return Map.FindPath(position, FindNearestNodeInternal(TileType.H, position));
                 case TargetType.Ressource:
-                    return Map.FindPath(position, FindNearestNodeInternal(TileType.R, position));
+                    return Map.FindPath(position, FindNearestNodeInternal(TileType.R, position), true);
                 default:
                     break;
             }
