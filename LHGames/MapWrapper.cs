@@ -47,7 +47,7 @@ namespace LHGames
         //    return result;
         //}
 
-        public List<Node> GetPathToNearestType(TargetType t)
+        public List<Node> GetPathToNearestType(TargetType t, Point position)
         {
             switch(t)
             {
@@ -77,5 +77,20 @@ namespace LHGames
         {
             return !TraveledPositions.Contains(newPosition);
         }
+
+        private Node FindNearestNode(TileType type, Point position)
+        {
+            Node closest = null;
+            foreach(Node n in Map.Values.Where( x => (TileType)x.Tile.C == type))
+            {
+                if(closest == null)
+                    closest = n;
+                else if(Point.Distance(closest.))
+            }
+
+            return closest;
+        }
+
+
     }
 }
