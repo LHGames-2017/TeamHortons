@@ -8,19 +8,22 @@ namespace LHGames.Controllers
 {
     public class Node
     {
-        private Tile t;
+        public string ID { get => X + ";" + Y; }
 
-        public byte C { get => t.C; }
-        public int X { get => t.X; }
-        public int Y { get => t.Y; }
-        public Tile Tile { get => t; }
+        public byte C { get => Tile.C; }
+        public int X { get => Tile.X; }
+        public int Y { get => Tile.Y; }
+        public Tile Tile { get; private set; }
 
         public Point Location { get; private set; }
         public bool IsWalkable { get; set; }
-        public float G { get; private set; }
-        public float H { get; private set; }
-        public float F { get { return G + H; } }
+        public float G { get; set; }
+        public float H { get; set; }
+        public float F { get; set; }
 
+        public TileType Type { get => (TileType)Tile.C; }
+
+        public Node lastH { get; set; }
         private Node parentNode;
         public Node ParentNode {
             get { return parentNode; }
@@ -33,9 +36,14 @@ namespace LHGames.Controllers
 
         public Node(Tile tile)
         {
-            t = tile;
+            Location = new Point(tile.X, tile.Y);
+            State = States.Dunno;
+            lastH = null;
+            H = int.MinValue;
+            G = 0;
 
-            switch ((TileType)t.C) {
+            Tile = tile;
+            switch ((TileType)Tile.C) {
                 case TileType.W:
                     IsWalkable = false;
                     break;
@@ -51,7 +59,7 @@ namespace LHGames.Controllers
         public States State { get; set; }
         public enum States { Dunno, Open, Closed }
 
-        internal static float GetTraversalCost(Point location, Point otherLocation)
+        public static float GetTraversalCost(Point location, Point otherLocation)
         {
             float deltaX = otherLocation.X - location.X;
             float deltaY = otherLocation.Y - location.Y;

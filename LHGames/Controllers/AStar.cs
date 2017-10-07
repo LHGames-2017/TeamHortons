@@ -8,12 +8,30 @@ namespace LHGames.Controllers
 {
     public class AStar : Dictionary<Point, Node>
     {
+        public static List<Point> players = new List<Point>();
+        
         public AStar(Tile[,] tiles)
         {
-            for (int x = 0, width = tiles.GetLength(0); x < width; x++) {
-                for (int y = 0, height = tiles.GetLength(1); y < height; y++) {
-                    Add(new Point(x, y), new Node(tiles[x, y]));
-                }
+            foreach (Tile tile in tiles) {
+                Add(new Point(tile.X, tile.Y), new Node(tile));
+            }
+        }
+
+        public Node this[Tile t] {
+            get {
+                return this[t.X, t.Y];
+            }
+            set {
+                this[t.X, t.Y] = value;
+            }
+        }
+
+        public Node this[int x, int y] {
+            get {
+                return this[new Point(x, y)];
+            }
+            set {
+                this[new Point(x, y)] = value;
             }
         }
 
@@ -34,15 +52,17 @@ namespace LHGames.Controllers
             }
         }
 
-        public List<Node> FindPath(Tile start, Tile end)
+        public List<Node> FindPath(Tile from, Tile to)
         {
             try {
+                UpdateHs(this.Select(t => t.Value).ToList(), this[to]);
+
                 // The start node is the first entry in the 'open' list
                 List<Point> path = new List<Point>();
-                bool success = Search(this[new Point(start.X, start.Y)]);
+                bool success = Search(this[from], this[to]);
                 if (success) {
                     // If a path was found, follow the parents from the end node to build a list of locations
-                    Node node = this[new Point(start.X, start.Y)];
+                    Node node = this[from];
                     while (node.ParentNode != null) {
                         path.Add(node.Location);
                         node = node.ParentNode;
@@ -58,17 +78,34 @@ namespace LHGames.Controllers
             }
         }
 
-        private bool Search(Node currTile)
+        private bool Search(Node currTile, Node to)
         {
             currTile.State = Node.States.Closed;
             List<Node> nextNodes = GetAdjacentWalkableNodes(currTile);
+
             nextNodes.Sort((node1, node2) => node1.F.CompareTo(node2.F));
             foreach (var nextNode in nextNodes) {
-                if (Search(nextNode)) {
+                if (Search(nextNode, to)) {
                     return true;
                 }
             }
             return false;
+        }
+        
+        private void UpdateHs(List<Node> nodes, Node to) {
+            foreach (var node in this) {
+                if (node.Value.lastH.ID != to.ID)  {
+                    node.Value.H = Node.GetTraversalCost(node.Value.Location, to.Location);
+                    node.Value.lastH = to;
+                }
+            }
+        }
+
+        private void UpdateH(Node node, Node to) {
+            if (node.lastH.ID != to.ID) {
+                node.H = Node.GetTraversalCost(node.Location, to.Location);
+                node.lastH = to;
+            }
         }
 
         private List<Node> GetAdjacentWalkableNodes(Node fromNode)
@@ -88,6 +125,11 @@ namespace LHGames.Controllers
 
                 // Ignore already-closed nodes
                 if (node.State == Node.States.Closed) {
+                    continue;
+                }
+
+                // Ignore players
+                if (players.First(p => p == node.Location) != null) {
                     continue;
                 }
 
@@ -112,7 +154,6 @@ namespace LHGames.Controllers
 
         private IEnumerable<Point> GetAdjacentLocations(Point fromLocation)
         {
-            var d = new Dictionary<int, int>();
             return new Point[]
             {
                 new Point(fromLocation.X - 1, fromLocation.Y),
