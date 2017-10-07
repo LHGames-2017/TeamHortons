@@ -24,17 +24,20 @@
             var carte = AIHelper.DeserializeMap(gameInfo.CustomSerializedMap);
 
             Draw(carte, gameInfo.Player.Position);
-
+            
             if (mapWrapper == null)
             {
                 mapWrapper = new MapWrapper(gameInfo.Player.Position, carte);
             }
             else
             {
-                mapWrapper.UpdateMap(carte, gameInfo.Player.Position);
+                lock (mapWrapper) {
+                    mapWrapper.UpdateMap(carte, gameInfo.Player.Position);
+                    return choiceMaker.HugeStateMachine(gameInfo);
+                }
             }
-            return choiceMaker.HugeStateMachine(gameInfo);
 
+            return AIHelper.CreateMoveAction(gameInfo.Player.Position);
         }
 
         public void Draw(Tile[,] tiles, Point player)

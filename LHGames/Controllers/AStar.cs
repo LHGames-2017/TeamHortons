@@ -12,13 +12,7 @@ namespace LHGames.Controllers
 
         public AStar(Tile[,] tiles)
         {
-            foreach (Tile tile in tiles) {
-                Node nodeToAdd = new Node(tile);
-                if (tile.X == MapWrapper.HousePosition.X && tile.Y == MapWrapper.HousePosition.Y) {
-                    nodeToAdd = new Node(new Tile((byte)TileType.T, nodeToAdd.X, nodeToAdd.Y));
-                }
-                Add(new Point(tile.X, tile.Y), new Node(tile));
-            }
+            Add(tiles);
         }
 
         public Node this[Tile t] {
@@ -49,17 +43,25 @@ namespace LHGames.Controllers
             }
         }
 
-        public void Add(IEnumerable<Tile> tiles)
+        public void Add(Tile[,] tiles)
         {
             foreach (Tile tile in tiles) {
                 Add(tile);
             }
         }
 
-        public List<Node> FindPath(Point from, Point to)
+        public List<Node> FindPath(Point from, Point to, bool mine = false)
         {
             if (from.X == to.X && from.Y == to.Y) {
                 return new List<Node>();
+            }
+
+            if (mine) {
+                Values.ToList().ForEach(v => {
+                    if (v.Type == TileType.R) {
+                        v.IsWalkable = true;
+                    }
+                });
             }
 
             try {
