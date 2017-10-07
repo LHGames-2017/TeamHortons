@@ -27,7 +27,7 @@ namespace LHGames.ChoiceMaker
                 SwitchState(lastState);
             }
 
-            if (gameInfo.Player.CarryingCapacity > gameInfo.Player.CarriedResources && path.Count == 0)
+            if (gameInfo.Player.CarryingCapacity > gameInfo.Player.CarriedResources)
             {
                 path = new Queue<Node>(mapWrapper.GetPathToNearestType(MapWrapper.TargetType.Ressource, gameInfo.Player.Position));
 
@@ -40,7 +40,7 @@ namespace LHGames.ChoiceMaker
                     SwitchState(States.WalkToMine);
                 }
             }
-            else if (gameInfo.Player.CarryingCapacity <= gameInfo.Player.CarriedResources && path.Count == 0)
+            else if (gameInfo.Player.CarryingCapacity <= gameInfo.Player.CarriedResources)
             {
                 path = new Queue<Node>(mapWrapper.Map.FindPath(gameInfo.Player.Position, gameInfo.Player.HouseLocation));
 
