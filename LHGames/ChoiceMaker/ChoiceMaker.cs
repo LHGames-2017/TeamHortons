@@ -19,7 +19,7 @@ namespace LHGames.ChoiceMaker
         {
             if(gameInfo.Player.Position.X == gameInfo.Player.HouseLocation.X && gameInfo.Player.Position.Y == gameInfo.Player.HouseLocation.Y)
             {
-
+                // TODO
             }
 
             if (state == States.BreakWall && path.Peek().Type != TileType.W)
