@@ -7,16 +7,15 @@
     using Newtonsoft.Json;
     using LHGames;
     using LHGames.Controllers;
+    using LHGames.ChoiceMaker;
 
     [Route("/")]
     public class GameController : Controller
     {
-        AIHelper player = new AIHelper();
-
-        static int nbTurns = 0;
+        // AIHelper player = new AIHelper();
+        
         static MapWrapper mapWrapper = null;
-        static Queue<Node> path = new Queue<Node>();
-        static States state = States.Dunno;
+        static ChoiceMaker choiceMaker = new ChoiceMaker();
 
         [HttpPost]
         public string Index([FromForm]string map)
@@ -26,53 +25,16 @@
 
             Draw(carte, gameInfo.Player.Position);
 
-            if (mapWrapper == null) {
+            if (mapWrapper == null)
+            {
                 mapWrapper = new MapWrapper(gameInfo.Player.Position, carte);
-            } else {
+            }
+            else
+            {
                 mapWrapper.UpdateMap(carte, gameInfo.Player.Position);
             }
+            return choiceMaker.HugeStateMachine(gameInfo);
 
-            if (gameInfo.Player.CarryingCapacity > gameInfo.Player.CarriedResources && path.Count == 0) {
-                path = new Queue<Node>(mapWrapper.GetPathToNearestType(MapWrapper.TargetType.Ressource, gameInfo.Player.Position));
-
-                if (path.Count <= 1) {
-                    state = States.Mine;
-                } else {
-                    state = States.WalkToMine;
-                }
-            } else if (gameInfo.Player.CarryingCapacity <= gameInfo.Player.CarriedResources && path.Count == 0) {
-                path = new Queue<Node>(mapWrapper.Map.FindPath(gameInfo.Player.Position, gameInfo.Player.HouseLocation));
-
-                if (path.Count <= 1) {
-                    state = States.Wait;
-                } else {
-                    state = States.WalkToHome;
-                }
-            }
-
-            Console.WriteLine(gameInfo.Player.CarriedResources + "/" + gameInfo.Player.CarryingCapacity + " -- " +  Enum.GetName(state.GetType(), state));
-
-            switch (state) {
-                case States.Mine:
-                    return AIHelper.CreateCollectAction(path.Dequeue().Location);
-                case States.Wait:
-                    return AIHelper.CreateMoveAction(gameInfo.Player.HouseLocation);
-                case States.WalkToMine:
-                case States.WalkToHome:
-                    return AIHelper.CreateMoveAction(path.Dequeue().Location);
-                default:
-                    return AIHelper.CreateMoveAction(gameInfo.Player.Position);
-            }
-
-        }
-
-        public enum States {
-            Dunno,
-
-            WalkToMine,
-            Mine,
-            WalkToHome,
-            Wait
         }
 
         public void Draw(Tile[,] tiles, Point player)

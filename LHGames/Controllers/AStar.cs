@@ -104,12 +104,12 @@ namespace LHGames.Controllers
 
         private void UpdateHs(List<Node> nodes, Node to) {
             foreach (var node in this) {
-                node.Value.H = Node.GetTraversalCost(node.Value.Location, to.Location);
+                node.Value.H = node.Value.CalcTraversal(to.Location);
             }
         }
 
         private void UpdateH(Node node, Node to) {
-            node.H = Node.GetTraversalCost(node.Location, to.Location);
+            node.H = node.CalcTraversal(to.Location);
         }
 
         private List<Node> GetAdjacentWalkableNodes(Node fromNode)
@@ -135,8 +135,8 @@ namespace LHGames.Controllers
                 }
 
                 if (node.State == Node.States.Open) {
-                    float traversalCost = Node.GetTraversalCost(node.Location, node.ParentNode.Location);
-                    float gTemp = fromNode.G + traversalCost;
+                    float traversalCost = (float)Point.Distance(node.Location, node.ParentNode.Location);
+                    float gTemp = fromNode.G + traversalCost + (node.Type == TileType.W ? 5 : 0);
                     if (gTemp < node.G) {
                         node.ParentNode = fromNode;
                         walkableNodes.Add(node);
