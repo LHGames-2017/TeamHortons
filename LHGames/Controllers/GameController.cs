@@ -12,21 +12,63 @@
     {
         AIHelper player = new AIHelper();
 
+        static int nbTurns = 0;
+
         [HttpPost]
         public string Index([FromForm]string map)
         {
             GameInfo gameInfo = JsonConvert.DeserializeObject<GameInfo>(map);
             var carte = AIHelper.DeserializeMap(gameInfo.CustomSerializedMap);
             
-            if (MapWrapper.Instance == null) {
-                new MapWrapper(gameInfo.Player.Position, carte);
+            //if (mapWrapper == null) {
+            //    mapWrapper = new MapWrapper(gameInfo.Player.Position, carte);
+            //} else {
+            //    mapWrapper.UpdateMap(carte, gameInfo.Player.Position);
+            //}
 
-                var path = MapWrapper.Instance.Map.FindPath(gameInfo.Player.Position, MapWrapper.Instance.Map.First(m => m.Value.C == (byte)TileType.R).Key);
-                Console.WriteLine("Count to nearest resource -> " + path.Count);
-            }
-
+            //var path = mapWrapper.Map.FindPath(new Point(15, 17), new Point(15, 21));
+            //Console.WriteLine("Count: " + path.Count);
 
             string action = AIHelper.CreateMoveAction(gameInfo.Player.Position);
+
+            string[] actions =
+            {
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(1, 0)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(1, 0)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(-1, 0)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(-1, 0)),
+            };
+
+            action = actions[nbTurns];
+
+            nbTurns = (nbTurns + 1) % 30;
+
             return action;
         }
 
