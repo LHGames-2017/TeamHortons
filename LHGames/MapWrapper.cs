@@ -8,12 +8,16 @@ namespace LHGames
 {
     public class MapWrapper
     {
+        public static MapWrapper Instance { get; private set; }
+
         public AStar Map { get; private set; }
         public List<Point> TraveledPositions { get; private set; }
         public static Point HousePosition { get; private set; }
 
         public MapWrapper(Point startPosition, Tile[,] map)
         {
+            Instance = this;
+
             HousePosition = startPosition;
             TraveledPositions = new List<Point>();
             Map = new AStar(map);
@@ -73,7 +77,7 @@ namespace LHGames
             return new List<Point>();
         }
 
-        private bool ShouldDiscover(StarterProject.Web.Api.Point newPosition)
+        private bool ShouldDiscover(Point newPosition)
         {
             return !TraveledPositions.Contains(newPosition);
         }
