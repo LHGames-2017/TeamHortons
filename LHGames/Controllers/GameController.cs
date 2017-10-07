@@ -12,7 +12,7 @@
     {
         AIHelper player = new AIHelper();
 
-        int nbTurns = 0;
+        static int nbTurns = 0;
 
         [HttpPost]
         public string Index([FromForm]string map)
