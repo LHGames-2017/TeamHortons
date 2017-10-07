@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
     using LHGames;
+    using LHGames.Controllers;
 
     [Route("/")]
     public class GameController : Controller
@@ -14,13 +15,15 @@
 
         static int nbTurns = 0;
         static MapWrapper mapWrapper = null;
+        static Queue<Node> path = new Queue<Node>();
+        static States state = States.Dunno;
 
         [HttpPost]
         public string Index([FromForm]string map)
         {
             GameInfo gameInfo = JsonConvert.DeserializeObject<GameInfo>(map);
             var carte = AIHelper.DeserializeMap(gameInfo.CustomSerializedMap);
-            
+
             Draw(carte, gameInfo.Player.Position);
 
             if (mapWrapper == null) {
@@ -29,24 +32,47 @@
                 mapWrapper.UpdateMap(carte, gameInfo.Player.Position);
             }
 
-            //var path = mapWrapper.Map.FindPath(new Point(15, 17), new Point(15, 21));
-            //Console.WriteLine("Count: " + path.Count);
+            if (gameInfo.Player.CarryingCapacity > gameInfo.Player.CarriedResources && path.Count == 0) {
+                path = new Queue<Node>(mapWrapper.GetPathToNearestType(MapWrapper.TargetType.Ressource, gameInfo.Player.Position));
 
-            string action = AIHelper.CreateMoveAction(gameInfo.Player.Position);
+                if (path.Count <= 1) {
+                    state = States.Mine;
+                } else {
+                    state = States.WalkToMine;
+                }
+            } else if (gameInfo.Player.CarryingCapacity <= gameInfo.Player.CarriedResources && path.Count == 0) {
+                path = new Queue<Node>(mapWrapper.Map.FindPath(gameInfo.Player.Position, gameInfo.Player.HouseLocation));
 
-            string[] actions =
-            {
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(1, 0)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(-1, 0))
-            };
+                if (path.Count <= 1) {
+                    state = States.Wait;
+                } else {
+                    state = States.WalkToHome;
+                }
+            }
 
-            action = actions[nbTurns];
+            Console.WriteLine(gameInfo.Player.CarriedResources + "/" + gameInfo.Player.CarryingCapacity + " -- " +  Enum.GetName(state.GetType(), state));
 
-            nbTurns = (nbTurns + 1) % 4;
+            switch (state) {
+                case States.Mine:
+                    return AIHelper.CreateCollectAction(path.Dequeue().Location);
+                case States.Wait:
+                    return AIHelper.CreateMoveAction(gameInfo.Player.HouseLocation);
+                case States.WalkToMine:
+                case States.WalkToHome:
+                    return AIHelper.CreateMoveAction(path.Dequeue().Location);
+                default:
+                    return AIHelper.CreateMoveAction(gameInfo.Player.Position);
+            }
 
-            return action;
+        }
+
+        public enum States {
+            Dunno,
+
+            WalkToMine,
+            Mine,
+            WalkToHome,
+            Wait
         }
 
         public void Draw(Tile[,] tiles, Point player)

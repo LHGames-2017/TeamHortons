@@ -58,23 +58,22 @@ namespace LHGames.Controllers
 
         public List<Node> FindPath(Point from, Point to)
         {
+            if (from.X == to.X && from.Y == to.Y) {
+                return new List<Node>();
+            }
+
             try {
                 UpdateHs(Values.ToList(), this[to]);
-
-                // The start node is the first entry in the 'open' list
+                
                 List<Point> path = new List<Point>();
                 bool success = Search(this[from], this[to]);
                 if (success) {
-                    // If a path was found, follow the parents from the end node to build a list of locations
-                    List<Node> nodes = Values.Where(v => v.ParentNode != null).ToList();
-
                     Node node = this[to];
                     while (node.ParentNode != null) {
                         path.Add(node.Location);
                         node = node.ParentNode;
                     }
-
-                    // Reverse the list so it's in the correct order when returned
+                    
                     path.Reverse();
                 }
 
@@ -131,12 +130,10 @@ namespace LHGames.Controllers
                 }
 
                 // Ignore players
-
-                if (fromNode == null) {
-                    Console.WriteLine("WTF");
+                if (players.Where(p => p.X == node.X && p.Y == node.Y).Count() != 0) {
+                    continue;
                 }
 
-                // Already-open nodes are only added to the list if their G-value is lower going via this route.
                 if (node.State == Node.States.Open) {
                     float traversalCost = Node.GetTraversalCost(node.Location, node.ParentNode.Location);
                     float gTemp = fromNode.G + traversalCost;
@@ -145,7 +142,6 @@ namespace LHGames.Controllers
                         walkableNodes.Add(node);
                     }
                 } else {
-                    // If it's untested, set the parent and flag it as 'Open' for consideration
                     node.ParentNode = fromNode;
                     node.State = Node.States.Open;
                     walkableNodes.Add(node);
