@@ -6,20 +6,14 @@ namespace LHGames.ChoiceMaker
 {
     public class FleeCalculator
     {
-        private double focusMultiplier;
-        private int pastPlayerHealth;
-
-        public FleeCalculator()
-        {
-            focusMultiplier = 0;
-            pastPlayerHealth = 0;
-        }
+        private static double focusMultiplier;
+        private static int pastPlayerHealth = 5;
 
         public double calculateWeight(ref Player player, int distanceToEnemy)
         {
-
-
             int healthLost = pastPlayerHealth - player.Health;
+
+            pastPlayerHealth = player.Health;
 
             double weight;
 

@@ -4,6 +4,6 @@ namespace LHGames.ChoiceMaker
 {
     public class CombatCalculator
     {
-        private double focusMultiplier;
+        private static double focusMultiplier;
     }
 }
