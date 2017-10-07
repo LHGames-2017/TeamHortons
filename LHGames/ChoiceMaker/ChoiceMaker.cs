@@ -17,12 +17,17 @@ namespace LHGames.ChoiceMaker
 
         public string HugeStateMachine(GameInfo gameInfo)
         {
+            if(gameInfo.Player.Position.X == gameInfo.Player.HouseLocation.X && gameInfo.Player.Position.Y == gameInfo.Player.HouseLocation.Y)
+            {
+
+            }
+
             if (state == States.BreakWall && path.Peek().Type != TileType.W)
             {
                 SwitchState(lastState);
             }
 
-            if (gameInfo.Player.CarryingCapacity > gameInfo.Player.CarriedResources && path.Count == 0)
+            if (gameInfo.Player.CarryingCapacity > gameInfo.Player.CarriedResources)
             {
                 path = new Queue<Node>(mapWrapper.GetPathToNearestType(MapWrapper.TargetType.Ressource, gameInfo.Player.Position));
 
@@ -35,7 +40,7 @@ namespace LHGames.ChoiceMaker
                     SwitchState(States.WalkToMine);
                 }
             }
-            else if (gameInfo.Player.CarryingCapacity <= gameInfo.Player.CarriedResources && path.Count == 0)
+            else if (gameInfo.Player.CarryingCapacity <= gameInfo.Player.CarriedResources)
             {
                 path = new Queue<Node>(mapWrapper.Map.FindPath(gameInfo.Player.Position, gameInfo.Player.HouseLocation));
 
