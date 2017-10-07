@@ -4,40 +4,78 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections;
 using StarterProject.Web.Api;
+using LHGames.Controllers;
 
 namespace LHGames
 {
     public class MapWrapper
     {
-        public Dictionary<Point, Tile> Map;
+        public AStar Map;
         public List<Point> TraveledPositions;
+        public Point HousePosition;
 
         public MapWrapper(Point startPosition, Tile[,] map)
         {
-            CreateMap(map);
+            Map = new AStar(map);
+            TraveledPositions.Add(startPosition);
         }
 
-        private void CreateMap(Tile[,] map)
+        public void UpdateMap(Tile[,] map, Point position)
         {
-            foreach (Tile t in map)
+            if (ShouldDiscover(position))
             {
-                Map.TryAdd(new Point(t.X, t.Y), t);
+                foreach (Tile t in map)
+                {
+                    Map.Add(t);
+                }
+                TraveledPositions.Add(position);
             }
         }
 
-        public void UpdateMap(Tile[,] map)
+        //public List<Node> ChangedTiles(Tile[,] map)
+        //{
+        //    List<Node> result = new List<Node>();
+        //    foreach (Tile t in map)
+        //    {
+        //        Node temp;
+        //        Map.TryGetValue(new Point(t.X, t.Y), out temp);
+        //        if(temp != null)
+        //        {
+        //            result.Add(temp);
+        //        }
+        //    }
+        //    return result;
+        //}
+
+        public List<Node> GetPathToNearestType(TargetType t)
         {
-            
+            switch(t)
+            {
+                case TargetType.Ennemy:
+                    break;
+                case TargetType.Shop:
+                    break;
+                case TargetType.House:
+                    break;
+                case TargetType.Ressource:
+                    break;
+                default:
+                    break;
+            }
+
+            return new List<Node>();
         }
 
-        public List<Tile> ChangedTiles()
-        {
-            return new List<Tile>();
-        }
+        public enum TargetType { Ennemy, Shop, House, Ressource}
 
-        private List<Point> TilesToDiscover()
+        private List<Point> TilesToDiscover(Point position)
         {
             return new List<Point>();
+        }
+
+        private bool ShouldDiscover(Point newPosition)
+        {
+            return !TraveledPositions.Contains(newPosition);
         }
     }
 }
