@@ -10,7 +10,7 @@ namespace LHGames
     {
         public AStar Map { get; private set; }
         public List<Point> TraveledPositions { get; private set; }
-        public Point HousePosition { get; private set; }
+        public static Point HousePosition { get; private set; }
 
         public MapWrapper(Point startPosition, Tile[,] map)
         {
@@ -52,13 +52,13 @@ namespace LHGames
             switch(t)
             {
                 case TargetType.Ennemy:
-                    break;
+                    return Map.FindPath(position, AStar.players.Aggregate((c, d) => Point.Distance(position, c) < Point.Distance(position, d) ? c : d));
                 case TargetType.Shop:
-                    break;
-                case TargetType.House:
-                    break;
+                    return Map.FindPath(position, FindNearestNodeInternal(TileType.S, position));
+                case TargetType.EnnemyHouse:
+                    return Map.FindPath(position, FindNearestNodeInternal(TileType.H, position));
                 case TargetType.Ressource:
-                    break;
+                    return Map.FindPath(position, FindNearestNodeInternal(TileType.R, position));
                 default:
                     break;
             }
@@ -66,7 +66,7 @@ namespace LHGames
             return new List<Node>();
         }
 
-        public enum TargetType { Ennemy, Shop, House, Ressource}
+        public enum TargetType { Ennemy, Shop, EnnemyHouse, Ressource, }
 
         private List<StarterProject.Web.Api.Point> TilesToDiscover(StarterProject.Web.Api.Point position)
         {
@@ -78,7 +78,7 @@ namespace LHGames
             return !TraveledPositions.Contains(newPosition);
         }
 
-        private Node FindNearestNodeInternal(TileType type, Point position)
+        private Point FindNearestNodeInternal(TileType type, Point position)
         {
             Node closest = null;
             double shortestDist = double.PositiveInfinity;
@@ -96,7 +96,7 @@ namespace LHGames
                 }
             }
 
-            return closest;
+            return closest.Location;
         }
 
 

@@ -13,7 +13,7 @@ namespace LHGames.Controllers
         public byte C { get => Tile.C; }
         public int X { get => Tile.X; }
         public int Y { get => Tile.Y; }
-        public Tile Tile { get; private set; }
+        public Tile Tile { get; set; }
 
         public Point Location { get; private set; }
         public bool IsWalkable { get; set; }

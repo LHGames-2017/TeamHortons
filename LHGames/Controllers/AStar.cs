@@ -13,6 +13,9 @@ namespace LHGames.Controllers
         public AStar(Tile[,] tiles)
         {
             foreach (Tile tile in tiles) {
+                Node nodeToAdd = new Node(tile);
+                if (tile.X == MapWrapper.HousePosition.X && tile.Y == MapWrapper.HousePosition.Y)
+                    nodeToAdd = new Node(new Tile((byte)TileType.T, nodeToAdd.X, nodeToAdd.Y));
                 Add(new Point(tile.X, tile.Y), new Node(tile));
             }
         }
