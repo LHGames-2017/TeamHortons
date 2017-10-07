@@ -26,14 +26,7 @@ namespace LHGames
 
         public void UpdateMap(Tile[,] map, Point position)
         {
-            if (ShouldDiscover(position))
-            {
-                foreach (Tile t in map)
-                {
-                    Map.Add(t);
-                }
-                TraveledPositions.Add(position);
-            }
+            Map.Add(map);
         }
 
         //public List<Node> ChangedTiles(Tile[,] map)
@@ -75,11 +68,6 @@ namespace LHGames
         private List<Point> TilesToDiscover(Point position)
         {
             return new List<Point>();
-        }
-
-        private bool ShouldDiscover(Point newPosition)
-        {
-            return !TraveledPositions.Contains(newPosition);
         }
 
         private Point FindNearestNodeInternal(TileType type, Point position)

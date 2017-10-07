@@ -49,25 +49,17 @@ namespace LHGames.Controllers
             }
         }
 
-        public void Add(IEnumerable<Tile> tiles)
+        public void Add(Tile[,] tiles)
         {
             foreach (Tile tile in tiles) {
                 Add(tile);
             }
         }
 
-        public List<Node> FindPath(Point from, Point to, bool ignoreWalls = false)
+        public List<Node> FindPath(Point from, Point to)
         {
             if (from.X == to.X && from.Y == to.Y) {
                 return new List<Node>();
-            }
-
-            if (ignoreWalls) {
-                Values.ToList().ForEach(p => {
-                    if (p.Type == TileType.W) {
-                        p.IsWalkable = true;
-                    }
-                });
             }
 
             try {
@@ -112,12 +104,12 @@ namespace LHGames.Controllers
 
         private void UpdateHs(List<Node> nodes, Node to) {
             foreach (var node in this) {
-                node.Value.H = Node.GetTraversalCost(node.Value.Location, to.Location);
+                node.Value.H = node.Value.CalcTraversal(to.Location);
             }
         }
 
         private void UpdateH(Node node, Node to) {
-            node.H = Node.GetTraversalCost(node.Location, to.Location);
+            node.H = node.CalcTraversal(to.Location);
         }
 
         private List<Node> GetAdjacentWalkableNodes(Node fromNode)
@@ -143,8 +135,8 @@ namespace LHGames.Controllers
                 }
 
                 if (node.State == Node.States.Open) {
-                    float traversalCost = Node.GetTraversalCost(node.Location, node.ParentNode.Location);
-                    float gTemp = fromNode.G + traversalCost;
+                    float traversalCost = (float)Point.Distance(node.Location, node.ParentNode.Location);
+                    float gTemp = fromNode.G + traversalCost + (node.Type == TileType.W ? 5 : 0);
                     if (gTemp < node.G) {
                         node.ParentNode = fromNode;
                         walkableNodes.Add(node);

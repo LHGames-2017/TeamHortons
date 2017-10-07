@@ -19,7 +19,7 @@ namespace LHGames.ChoiceMaker
         {
             if(gameInfo.Player.Position.X == gameInfo.Player.HouseLocation.X && gameInfo.Player.Position.Y == gameInfo.Player.HouseLocation.Y)
             {
-
+                // TODO
             }
 
             if (state == States.BreakWall && path.Peek().Type != TileType.W)
@@ -54,7 +54,12 @@ namespace LHGames.ChoiceMaker
                 }
             }
 
+            Console.WriteLine(gameInfo.Player.Position + " " + path.Count);
             Console.WriteLine(gameInfo.Player.CarriedResources + "/" + gameInfo.Player.CarryingCapacity + " -- " + Enum.GetName(state.GetType(), state));
+
+            if (path.Count == 0) {
+                return AIHelper.CreateMoveAction(gameInfo.Player.Position);
+            }
 
             switch (state)
             {
