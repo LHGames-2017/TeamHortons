@@ -13,13 +13,15 @@ namespace LHGames.Controllers
         public byte C { get => Tile.C; }
         public int X { get => Tile.X; }
         public int Y { get => Tile.Y; }
-        public Tile Tile { get; private set; }
+        public Tile Tile { get; set; }
 
         public Point Location { get; private set; }
         public bool IsWalkable { get; set; }
         public float G { get; set; }
         public float H { get; set; }
         public float F { get; set; }
+
+        public TileType Type { get => (TileType)Tile.C; }
 
         public Node lastH { get; set; }
         private Node parentNode;
@@ -34,7 +36,7 @@ namespace LHGames.Controllers
 
         public Node(Tile tile)
         {
-            Location = new Point(tile.X, tile.Y);
+            Location = new StarterProject.Web.Api.Point(tile.X, tile.Y);
             State = States.Dunno;
             lastH = null;
             H = int.MinValue;
@@ -57,7 +59,7 @@ namespace LHGames.Controllers
         public States State { get; set; }
         public enum States { Dunno, Open, Closed }
 
-        public static float GetTraversalCost(Point location, Point otherLocation)
+        public static float GetTraversalCost(StarterProject.Web.Api.Point location, StarterProject.Web.Api.Point otherLocation)
         {
             float deltaX = otherLocation.X - location.X;
             float deltaY = otherLocation.Y - location.Y;
@@ -66,7 +68,7 @@ namespace LHGames.Controllers
 
         public override string ToString()
         {
-            return "(" + X + ", " + Y + ") => " + Enum.GetName(State.GetType(), State);
+            return "{" + X + "," + Y + "} => " + Enum.GetName(State.GetType(), State);
         }
     }
 }

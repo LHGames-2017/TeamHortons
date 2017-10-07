@@ -13,6 +13,9 @@ namespace LHGames.Controllers
         public AStar(Tile[,] tiles)
         {
             foreach (Tile tile in tiles) {
+                Node nodeToAdd = new Node(tile);
+                if (tile.X == MapWrapper.HousePosition.X && tile.Y == MapWrapper.HousePosition.Y)
+                    nodeToAdd = new Node(new Tile((byte)TileType.T, nodeToAdd.X, nodeToAdd.Y));
                 Add(new Point(tile.X, tile.Y), new Node(tile));
             }
         }
@@ -52,7 +55,7 @@ namespace LHGames.Controllers
             }
         }
 
-        public List<Node> FindPath(Tile from, Tile to)
+        public List<Node> FindPath(Point from, Point to)
         {
             try {
                 UpdateHs(this.Select(t => t.Value).ToList(), this[to]);
@@ -91,10 +94,10 @@ namespace LHGames.Controllers
             }
             return false;
         }
-        
+
         private void UpdateHs(List<Node> nodes, Node to) {
             foreach (var node in this) {
-                if (node.Value.lastH.ID != to.ID)  {
+                if (node.Value.lastH != null && node.Value.lastH.ID != to.ID) {
                     node.Value.H = Node.GetTraversalCost(node.Value.Location, to.Location);
                     node.Value.lastH = to;
                 }
@@ -102,10 +105,10 @@ namespace LHGames.Controllers
         }
 
         private void UpdateH(Node node, Node to) {
-            if (node.lastH.ID != to.ID) {
-                node.H = Node.GetTraversalCost(node.Location, to.Location);
-                node.lastH = to;
-            }
+            //if (node.lastH.ID != to.ID) {
+            node.H = Node.GetTraversalCost(node.Location, to.Location);
+            node.lastH = to;
+            //}
         }
 
         private List<Node> GetAdjacentWalkableNodes(Node fromNode)
@@ -129,9 +132,6 @@ namespace LHGames.Controllers
                 }
 
                 // Ignore players
-                if (players.First(p => p == node.Location) != null) {
-                    continue;
-                }
 
                 // Already-open nodes are only added to the list if their G-value is lower going via this route.
                 if (node.State == Node.States.Open) {
@@ -156,13 +156,9 @@ namespace LHGames.Controllers
         {
             return new Point[]
             {
-                new Point(fromLocation.X - 1, fromLocation.Y - 1),
                 new Point(fromLocation.X - 1, fromLocation.Y),
-                new Point(fromLocation.X - 1, fromLocation.Y + 1),
                 new Point(fromLocation.X, fromLocation.Y + 1),
-                new Point(fromLocation.X + 1, fromLocation.Y + 1),
                 new Point(fromLocation.X + 1, fromLocation.Y),
-                new Point(fromLocation.X + 1, fromLocation.Y - 1),
                 new Point(fromLocation.X,   fromLocation.Y - 1)
             }.Where(p => ContainsKey(p));
         }
