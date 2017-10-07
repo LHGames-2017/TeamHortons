@@ -17,6 +17,11 @@ namespace LHGames.ChoiceMaker
 
         public string HugeStateMachine(GameInfo gameInfo)
         {
+            if(gameInfo.Player.Position.X == gameInfo.Player.HouseLocation.X && gameInfo.Player.Position.Y == gameInfo.Player.HouseLocation.Y)
+            {
+
+            }
+
             if (state == States.BreakWall && path.Peek().Type != TileType.W)
             {
 
