@@ -12,14 +12,17 @@
     {
         AIHelper player = new AIHelper();
 
-        int nbTurns = 0;
+        static int nbTurns = 0;
+        static MapWrapper mapWrapper = null;
 
         [HttpPost]
         public string Index([FromForm]string map)
         {
             GameInfo gameInfo = JsonConvert.DeserializeObject<GameInfo>(map);
             var carte = AIHelper.DeserializeMap(gameInfo.CustomSerializedMap);
-            
+
+
+            Draw(carte, gameInfo.Player.Position);
             //if (mapWrapper == null) {
             //    mapWrapper = new MapWrapper(gameInfo.Player.Position, carte);
             //} else {
@@ -34,45 +37,19 @@
             string[] actions =
             {
                 AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, -1)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
                 AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(1, 0)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(1, 0)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateCollectAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(0, 1)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(-1, 0)),
-                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(-1, 0)),
+                AIHelper.CreateMoveAction(gameInfo.Player.Position + new Point(-1, 0))
             };
 
             action = actions[nbTurns];
 
-            nbTurns = (nbTurns + 1) % 30;
+            nbTurns = (nbTurns + 1) % 4;
 
             return action;
         }
 
-        /*public void Draw(Tile[,] tiles, Point player)
+        public void Draw(Tile[,] tiles, Point player)
         {
             for (int x = 0, width = tiles.GetLength(0); x < width; x++) {
                 string line = "";
@@ -104,6 +81,6 @@
                 }
                 Console.WriteLine(line);
             }
-        }*/
+        }
     }
 }
