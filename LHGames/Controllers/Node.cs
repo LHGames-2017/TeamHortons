@@ -19,11 +19,10 @@ namespace LHGames.Controllers
         public bool IsWalkable { get; set; }
         public float G { get; set; }
         public float H { get; set; }
-        public float F { get; set; }
+        public float F { get => G + H; }
 
         public TileType Type { get => (TileType)Tile.C; }
-
-        public Node lastH { get; set; }
+        
         private Node parentNode;
         public Node ParentNode {
             get { return parentNode; }
@@ -36,10 +35,9 @@ namespace LHGames.Controllers
 
         public Node(Tile tile)
         {
-            Location = new StarterProject.Web.Api.Point(tile.X, tile.Y);
+            Location = new Point(tile.X, tile.Y);
             State = States.Dunno;
-            lastH = null;
-            H = int.MinValue;
+            H = int.MaxValue;
             G = 0;
 
             Tile = tile;
@@ -59,7 +57,12 @@ namespace LHGames.Controllers
         public States State { get; set; }
         public enum States { Dunno, Open, Closed }
 
-        public static float GetTraversalCost(StarterProject.Web.Api.Point location, StarterProject.Web.Api.Point otherLocation)
+        public void Reset() {
+            State = States.Dunno;
+            parentNode = null;
+        }
+
+        public static float GetTraversalCost(Point location, Point otherLocation)
         {
             float deltaX = otherLocation.X - location.X;
             float deltaY = otherLocation.Y - location.Y;

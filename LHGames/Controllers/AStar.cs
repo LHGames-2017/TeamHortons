@@ -55,14 +55,16 @@ namespace LHGames.Controllers
         public List<Node> FindPath(Point from, Point to)
         {
             try {
-                UpdateHs(this.Select(t => t.Value).ToList(), this[to]);
+                UpdateHs(Values.ToList(), this[to]);
 
                 // The start node is the first entry in the 'open' list
                 List<Point> path = new List<Point>();
                 bool success = Search(this[from], this[to]);
                 if (success) {
                     // If a path was found, follow the parents from the end node to build a list of locations
-                    Node node = this[from];
+                    List<Node> nodes = Values.Where(v => v.ParentNode != null).ToList();
+
+                    Node node = this[to];
                     while (node.ParentNode != null) {
                         path.Add(node.Location);
                         node = node.ParentNode;
@@ -72,6 +74,7 @@ namespace LHGames.Controllers
                     path.Reverse();
                 }
 
+                Values.ToList().ForEach(p => p.Reset());
                 return path.Select(p => this[p]).ToList();
             } catch (KeyNotFoundException) {
                 throw new Exception("Dude, ya une tile qui existe pas");
@@ -84,9 +87,13 @@ namespace LHGames.Controllers
             List<Node> nextNodes = GetAdjacentWalkableNodes(currTile);
 
             nextNodes.Sort((node1, node2) => node1.F.CompareTo(node2.F));
-            foreach (var nextNode in nextNodes) {
-                if (Search(nextNode, to)) {
-                    return true;
+                foreach (var nextNode in nextNodes) {
+                    if (nextNode.Location.X == to.Location.X && nextNode.Location.Y == to.Location.Y) {
+                        return true;
+                    } else {
+                    if (Search(nextNode, to)) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -94,18 +101,12 @@ namespace LHGames.Controllers
 
         private void UpdateHs(List<Node> nodes, Node to) {
             foreach (var node in this) {
-                if (node.Value.lastH != null && node.Value.lastH.ID != to.ID) {
-                    node.Value.H = Node.GetTraversalCost(node.Value.Location, to.Location);
-                    node.Value.lastH = to;
-                }
+                node.Value.H = Node.GetTraversalCost(node.Value.Location, to.Location);
             }
         }
 
         private void UpdateH(Node node, Node to) {
-            //if (node.lastH.ID != to.ID) {
             node.H = Node.GetTraversalCost(node.Location, to.Location);
-            node.lastH = to;
-            //}
         }
 
         private List<Node> GetAdjacentWalkableNodes(Node fromNode)
@@ -114,9 +115,6 @@ namespace LHGames.Controllers
             IEnumerable<Point> nextLocations = GetAdjacentLocations(fromNode.Location);
 
             foreach (var location in nextLocations) {
-                int x = location.X;
-                int y = location.Y;
-
                 Node node = this[location];
                 // Ignore non-walkable nodes
                 if (!node.IsWalkable) {
@@ -129,6 +127,10 @@ namespace LHGames.Controllers
                 }
 
                 // Ignore players
+
+                if (fromNode == null) {
+                    Console.WriteLine("WTF");
+                }
 
                 // Already-open nodes are only added to the list if their G-value is lower going via this route.
                 if (node.State == Node.States.Open) {
@@ -153,14 +155,10 @@ namespace LHGames.Controllers
         {
             return new Point[]
             {
-                new Point(fromLocation.X - 1, fromLocation.Y - 1),
                 new Point(fromLocation.X - 1, fromLocation.Y),
-                new Point(fromLocation.X - 1, fromLocation.Y + 1),
                 new Point(fromLocation.X, fromLocation.Y + 1),
-                new Point(fromLocation.X + 1, fromLocation.Y + 1),
                 new Point(fromLocation.X + 1, fromLocation.Y),
-                new Point(fromLocation.X + 1, fromLocation.Y - 1),
-                new Point(fromLocation.X,   fromLocation.Y - 1)
+                new Point(fromLocation.X, fromLocation.Y - 1)
             }.Where(p => ContainsKey(p));
         }
     }
