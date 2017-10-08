@@ -20,25 +20,20 @@ namespace LHGames.ChoiceMaker
             if(gameInfo.Player.Position.X == gameInfo.Player.HouseLocation.X && gameInfo.Player.Position.Y == gameInfo.Player.HouseLocation.Y)
             {
                 Player player = gameInfo.Player;
-                if (player.CarryingCapacity == 1000 && player.Score > 15000)
-                {
-                    SwitchState(States.UpgradeCapacity);
+                if (player.CarryingCapacity == 1000 && player.Score >= 15000) {
+                    return AIHelper.CreateUpgradeAction(UpgradeType.CarryingCapacity);
                 }
-                else if (player.CarryingCapacity == 1500 && player.Score > 65000)
-                {
-                    SwitchState(States.UpgradeCapacity);
+                else if (player.CarryingCapacity == 1500 && player.Score >= 65000) {
+                    return AIHelper.CreateUpgradeAction(UpgradeType.CarryingCapacity);
                 }
-                else if (player.CarryingCapacity == 2500 && player.Score > 165000)
-                {
-                    SwitchState(States.UpgradeCapacity);
+                else if (player.CarryingCapacity == 2500 && player.Score >= 165000) {
+                    return AIHelper.CreateUpgradeAction(UpgradeType.CarryingCapacity);
                 }
-                else if (player.CarryingCapacity == 5000 && player.Score > 415000)
-                {
-                    SwitchState(States.UpgradeCapacity);
+                else if (player.CarryingCapacity == 5000 && player.Score >= 415000) {
+                    return AIHelper.CreateUpgradeAction(UpgradeType.CarryingCapacity);
                 }
-                else if (player.CarryingCapacity == 10000 && player.Score > 915000)
-                {
-                    SwitchState(States.UpgradeCapacity);
+                else if (player.CarryingCapacity == 10000 && player.Score >= 915000) {
+                    return AIHelper.CreateUpgradeAction(UpgradeType.CarryingCapacity);
                 }
             }
 
@@ -78,7 +73,6 @@ namespace LHGames.ChoiceMaker
             Console.WriteLine(gameInfo.Player.CarriedResources + "/" + gameInfo.Player.CarryingCapacity + " -- " + Enum.GetName(state.GetType(), state));
 
             if (path.Count == 0) {
-                Console.WriteLine("FUCK");
                 return AIHelper.CreateMoveAction(gameInfo.Player.Position);
             }
 

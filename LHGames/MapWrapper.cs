@@ -87,6 +87,11 @@ namespace LHGames
                     shortestDist = Point.Distance(n.Location, position);
                 }
             }
+
+            if (closest == null) {
+                return HousePosition;
+            }
+
             Console.WriteLine("BOOP  " + closest.Location.X + "," + closest.Location.Y);
             return closest.Location;
         }
